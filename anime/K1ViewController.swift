@@ -12,46 +12,39 @@ class K1ViewController: UIViewController {
     
     @IBOutlet var titleTextFeild: UITextField!
     
+    var resultHandler: ((String) -> Void)?
     
+
+    var saveData = UserDefaults.standard
     
-    //Userefaults
-    var savaData: UserDefaults = UserDefaults.standard
+ 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        titleTextFeild.text = savaData.object(forKey: "title") as? String
-        
-      
-
         // Do any additional setup after loading the view.
-    }
-    
-    @IBAction func saveDate() {
-     //UserDefultに書き込み
         
-        savaData.set(titleTextFeild.text, forKey: "title")
-    
-    }
-    
-    @IBAction func byPerformSegue(_sender:Any){
-            self.performSegue(withIdentifier: "toView", sender: nil)
+        titleTextFeild.text = saveData.object(forKey: "save") as? String
 
+        
     }
+
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    
-           // ②Segueの識別子確認
-           if segue.identifier == "toView" {
-    
-               // ③遷移先ViewCntrollerの取得
-               let nextView = segue.destination as! ViewController
-    
-               // ④値の設定
-            nextView.K1String = titleTextFeild.text!
-           }
-       }
-    
+    @IBAction func backView(_ sender: Any) {
+
+        guard let text = self.titleTextFeild.text else { return }
+
+        // 用意したクロージャに関数がセットされているか確認する
+        if let handler = self.resultHandler {
+            // 入力値を引数として渡された処理の実行
+            handler(text)
+        }
+        
+
+        saveData.set(titleTextFeild.text, forKey: "save")
+
+        
+        self.dismiss(animated: true, completion: nil)
+    }
     
     //テキストフィールドの編集を終わらせる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

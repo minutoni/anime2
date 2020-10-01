@@ -10,10 +10,31 @@ import UIKit
 
 class K4ViewController: UIViewController {
 
+    @IBOutlet var titleTextFeild: UITextField!
+    
+    var resultHandler: ((String) -> Void)?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func backView(_ sender: Any) {
+
+        guard let text = self.titleTextFeild.text else { return }
+
+        // 用意したクロージャに関数がセットされているか確認する
+        if let handler = self.resultHandler {
+            // 入力値を引数として渡された処理の実行
+            handler(text)
+        }
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
 
